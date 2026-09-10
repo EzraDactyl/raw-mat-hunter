@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>Raw Material Locator</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="header">
+  <h1>Raw Material Locator</h1>
+  <p>Search aliases, find stock, and check a batch.</p>
+</header>
+<main class="wrap">
+  <nav class="tabs">
+    <button class="tab active" data-tab="find">Find</button>
+    <button class="tab" data-tab="batch">Batch Check</button>
+    <button class="tab" data-tab="inventory">Inventory</button>
+    <button class="tab" data-tab="backup">Backup</button>
+  </nav>
+
+  <section id="find" class="panel active">
+    <h2>Find a material</h2>
+    <input id="search" class="big" placeholder="Carbomer 940, Synthalen-K, Acritamer 940...">
+    <div id="results" class="cards"></div>
+  </section>
+
+  <section id="batch" class="panel">
+    <h2>Batch check</h2>
+    <p class="muted">One line per material: <code>Name | Required Qty | Unit</code></p>
+    <textarea id="batchIn" rows="9" placeholder="Synthalen-K | 12 | kg&#10;Glycerin | 25 | kg"></textarea>
+    <div class="row"><button id="check" class="primary">Check batch</button><button id="clear">Clear</button></div>
+    <div id="summary"></div><div id="batchOut" class="cards"></div>
+  </section>
+
+  <section id="inventory" class="panel">
+    <div class="sectionhead"><h2>Inventory</h2><button id="add" class="primary">+ Add material</button></div>
+    <input id="filter" placeholder="Filter inventory...">
+    <div id="invList" class="cards"></div>
+  </section>
+
+  <section id="backup" class="panel">
+    <h2>Backup / transfer</h2>
+    <p class="muted">Data is stored on this device. Export a backup regularly.</p>
+    <article class="card"><h3>Full backup</h3><div class="row"><button id="exportJson" class="primary">Export JSON</button><label class="filebtn">Import JSON<input id="importJson" type="file" accept=".json,application/json"></label></div></article>
+    <article class="card"><h3>Spreadsheet</h3><p>CSV columns: Canonical Name, Aliases, Item Code, Vendor, Location, Quantity, Unit.</p><div class="row"><button id="exportCsv">Export CSV</button><label class="filebtn">Import CSV<input id="importCsv" type="file" accept=".csv,text/csv"></label></div></article>
+    <article class="card"><h3>Batch-record scanning</h3><p>The first prototype does not use camera OCR yet. That is the next logical upgrade once the inventory workflow feels right.</p></article>
+  </section>
+</main>
+
+<dialog id="dlg">
+<form id="form">
+  <div class="sectionhead"><h3 id="dlgTitle">Add material</h3><button type="button" class="x" id="close">×</button></div>
+  <input id="id" type="hidden">
+  <label>Canonical / chemical name<input id="name" required placeholder="Carbomer 940"></label>
+  <label>Aliases / brand names<textarea id="aliases" rows="3" placeholder="Synthalen-K, Acritamer 940, Lubrizol Viscosity Booster 940"></textarea></label>
+  <div class="grid2"><label>Internal item code<input id="item" placeholder="RM-00412"></label><label>Vendor / manufacturer<input id="vendor" placeholder="Lubrizol"></label></div>
+  <h4>Stock locations</h4><div id="stocks"></div>
+  <button type="button" id="addStock">+ Add location</button>
+  <div class="row"><button type="button" id="delete" class="danger hidden">Delete</button><span class="spacer"></span><button type="button" id="cancel">Cancel</button><button class="primary" type="submit">Save</button></div>
+</form>
+</dialog>
+
+<template id="stockTpl"><div class="stock"><input class="loc" placeholder="G26"><input class="qty" type="number" step="any" min="0" placeholder="Qty"><select class="unit"><option>kg</option><option>g</option><option>lb</option><option>oz</option><option>L</option><option>mL</option><option>gal</option><option>fl oz</option><option>ea</option></select><button type="button" class="x rem">×</button></div></template>
+<script src="app.js"></script>
+</body></html>
